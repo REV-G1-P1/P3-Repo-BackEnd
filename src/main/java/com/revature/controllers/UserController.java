@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.revature.models.Address;
 import com.revature.models.User;
 import com.revature.services.UserService;
 
@@ -29,8 +28,9 @@ public class UserController {
 		
 	@PostMapping("/register")
     public ResponseEntity<String> createUser(@RequestBody User user){
-        if(userService.findUserByEmail(user.getEmail()) == null){
+        if(userService.findUserByEmail(user.getEmail()) == null && userService.findUserBySSN(user.getSSN()) == null){
             userService.createUser(user);
+
             return new ResponseEntity<>("User created successfully", HttpStatus.CREATED);
         }
         return new ResponseEntity<>("User already exists", HttpStatus.CONFLICT);

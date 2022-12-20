@@ -41,24 +41,23 @@ public class User {
     @Column(name = "last_name", length = 30, nullable = false)
     private String lastName;
 
-    @Column(length = 9, nullable = false)
-    private Integer ssn;
+    @Column(length = 9, nullable = false, unique = true)
+    private Integer SSN;
 
     @Column(name = "user_role")
     @Enumerated(EnumType.STRING)
     private UserRole userRole;
 
-    @Column(length = 30, nullable = false)
+    @Column(nullable = false)
     private String password;
 
     @OneToOne(targetEntity = Address.class, cascade = { CascadeType.ALL}, orphanRemoval = true)
     @JoinTable(name = "User_Address", joinColumns = { @JoinColumn(name = "user_id")}, inverseJoinColumns = { @JoinColumn(name = "address_id") })
     private Address address;
 
-    //OneToMany? One user can have multiple accounts
-    @OneToOne(targetEntity = AccountInformation.class, cascade = { CascadeType.ALL}, orphanRemoval = true)
+    @OneToMany(targetEntity = AccountInformation.class, cascade = { CascadeType.ALL}, orphanRemoval = true)
     @JoinTable(name = "User_Account", joinColumns = { @JoinColumn(name = "user_id")}, inverseJoinColumns = { @JoinColumn(name = "account_number") })
-    private AccountInformation accountInformation;
+    private List<AccountInformation> accountInformation;
 
     @OneToMany(targetEntity = MortgageApplication.class, cascade = { CascadeType.ALL}, orphanRemoval = true)
     @JoinTable(name = "User_Applications", joinColumns = { @JoinColumn(name = "user_id")}, inverseJoinColumns = { @JoinColumn(name = "application_id") })
