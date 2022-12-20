@@ -25,16 +25,14 @@ public class UserController {
 	
     @Autowired
 	private UserService userService;
-	
-	
+		
 	@PostMapping("/register")
     public ResponseEntity<String> createUser(@RequestBody User user){
         if(userService.findUserByEmail(user.getEmail()) == null){
             userService.createUser(user);
             return new ResponseEntity<>("User created successfully", HttpStatus.CREATED);
         }
-        else
-        	return new ResponseEntity<>("User already exists", HttpStatus.CONFLICT);
+        return new ResponseEntity<>("User already exists", HttpStatus.CONFLICT);
     }
 	
 	@PutMapping("/update") //Might need adjustments to RequestBody depending on what will be updated
