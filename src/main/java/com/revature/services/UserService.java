@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.revature.models.Address;
 import com.revature.models.User;
 import com.revature.models.UserRole;
 import com.revature.repositories.UserRepository;
@@ -23,14 +24,27 @@ public class UserService {
 	}
 
 	public User updateUser(String email, String firstName, String lastName, String password) {
-		// TODO Auto-generated method stub
-		return null;
+		User tempUser = userRepository.findUserByEmail(email).get();
+		tempUser.setFirstName(firstName);
+		tempUser.setLastName(lastName);
+		tempUser.setPassword(password);
+		
+		return userRepository.save(tempUser);
 	}
 	
 	public User updateUserAddress(String email, String streetAddress, String streetAddressLine2, String city,
 			String state, Integer zipCode) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		User tempUser = userRepository.findUserByEmail(email).get();
+		Address tempUserAddress = tempUser.getAddress();
+		tempUserAddress.setStreetAddress(streetAddress);
+		tempUserAddress.setStreetAddressLine2(streetAddressLine2);
+		tempUserAddress.setCity(city);
+		tempUserAddress.setState(state);
+		tempUserAddress.setZipCode(zipCode);
+		tempUser.setAddress(tempUserAddress);
+		
+		return userRepository.save(tempUser);
 	}
 	
 	public User findUserByEmail(String email) {
@@ -42,12 +56,15 @@ public class UserService {
 	}
 
 	public User findUserById(Integer id) {
-		// TODO Auto-generated method stub
-		return null;
+		Optional<User> tempUser = userRepository.findById(id);
+		if(tempUser.isPresent()) {
+            return tempUser.get();
+        }
+        return null;
 	}
 
 	public void deleteUser(Integer id) {
-		// TODO Auto-generated method stub
+		userRepository.deleteById(id);
 		
 	}
 

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.revature.models.Address;
 import com.revature.models.User;
 import com.revature.services.UserService;
 
@@ -46,8 +47,7 @@ public class UserController {
             userService.updateUser(email, firstName, lastName, password);
             return new ResponseEntity<>("User updated successfully", HttpStatus.OK);
         }
-		else
-			return new ResponseEntity<>("User does not exists", HttpStatus.NOT_FOUND);
+		return new ResponseEntity<>("User does not exists", HttpStatus.NOT_FOUND);
 	}
 	
 	@PutMapping("/update/address") //Might need adjustments to RequestBody depending on what will be updated
@@ -63,8 +63,7 @@ public class UserController {
             userService.updateUserAddress(email, streetAddress, streetAddressLine2, city, state, zipCode);
             return new ResponseEntity<>("User address updated successfully", HttpStatus.OK);
         }
-		else
-			return new ResponseEntity<>("User does not exists", HttpStatus.NOT_FOUND);
+		return new ResponseEntity<>("User does not exists", HttpStatus.NOT_FOUND);
 	}
 	
 	@GetMapping("/get/{id}")
@@ -72,9 +71,8 @@ public class UserController {
         User user = userService.findUserById(id);
         if(user == null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        } else {
-            return new ResponseEntity<>(user, HttpStatus.OK);
         }
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 	
 	@DeleteMapping("/delete/{id}")
