@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.revature.models.Claim;
 import com.revature.models.LoanStatus;
 import com.revature.models.MortgageApplication;
 import com.revature.models.User;
