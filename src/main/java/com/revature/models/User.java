@@ -55,6 +55,7 @@ public class User {
     @JoinTable(name = "User_Address", joinColumns = { @JoinColumn(name = "user_id")}, inverseJoinColumns = { @JoinColumn(name = "address_id") })
     private Address address;
 
+    //OneToMany? One user can have multiple accounts
     @OneToOne(targetEntity = AccountInformation.class, cascade = { CascadeType.ALL}, orphanRemoval = true)
     @JoinTable(name = "User_Account", joinColumns = { @JoinColumn(name = "user_id")}, inverseJoinColumns = { @JoinColumn(name = "account_number") })
     private AccountInformation accountInformation;
