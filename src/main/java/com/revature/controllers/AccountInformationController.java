@@ -37,8 +37,7 @@ public class AccountInformationController {
 			accountInformationService.updateAccountName(accountNumber, accountName);
             return new ResponseEntity<>("Account name updated successfully", HttpStatus.OK);
         }
-		else
-			return new ResponseEntity<>("Account does not exists", HttpStatus.NOT_FOUND);
+		return new ResponseEntity<>("Account does not exists", HttpStatus.NOT_FOUND);
 	}
 	
 	@PutMapping("/update/balance")
@@ -49,8 +48,7 @@ public class AccountInformationController {
 			accountInformationService.updateAccountBalance(accountNumber, balance);
             return new ResponseEntity<>("Account balance updated successfully", HttpStatus.OK);
         }
-		else
-			return new ResponseEntity<>("Account does not exists", HttpStatus.NOT_FOUND);
+		return new ResponseEntity<>("Account does not exists", HttpStatus.NOT_FOUND);
 	}
 	
 	@GetMapping("/get")
@@ -58,9 +56,8 @@ public class AccountInformationController {
 		AccountInformation ai = accountInformationService.findAccountByAccountNumber(accountNumber);
         if(ai == null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        } else {
-            return new ResponseEntity<>(ai, HttpStatus.OK);
         }
+        return new ResponseEntity<>(ai, HttpStatus.OK);
     }
 	
 	@DeleteMapping("/delete")

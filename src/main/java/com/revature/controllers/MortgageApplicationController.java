@@ -23,12 +23,12 @@ public class MortgageApplicationController {
 	
 	
 	@PostMapping("/create")
-    public ResponseEntity<MortgageApplication> createAccount(@RequestBody MortgageApplication mortgage){
+    public ResponseEntity<MortgageApplication> createMortgage(@RequestBody MortgageApplication mortgage){
 		return new ResponseEntity<>(mortgageApplicationService.createMortgage(mortgage), HttpStatus.CREATED);
     }
 	
 	@GetMapping("/get/{applicationId}")
-    public ResponseEntity<MortgageApplication> findAccountByAccountNumber(@PathVariable Integer applicationId) {
+    public ResponseEntity<MortgageApplication> findMortgageById(@PathVariable Integer applicationId) {
 		MortgageApplication ma = mortgageApplicationService.findMortgageByApplicationId(applicationId);
         if(ma == null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -38,7 +38,7 @@ public class MortgageApplicationController {
     }
 	
 	@DeleteMapping("/delete/{applicationId}")
-	public ResponseEntity<String> deleteUserById(@PathVariable Integer applicationId) {
+	public ResponseEntity<String> deleteMortgageById(@PathVariable Integer applicationId) {
         if(mortgageApplicationService.findMortgageByApplicationId(applicationId) == null){
             return new ResponseEntity<>("Mortgage application does not exists", HttpStatus.NOT_FOUND);
         } else {
