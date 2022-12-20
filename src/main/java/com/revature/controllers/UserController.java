@@ -36,7 +36,7 @@ public class UserController {
         return new ResponseEntity<>("User already exists", HttpStatus.CONFLICT);
     }
 	
-	@PutMapping("/update") //Might need adjustments to RequestBody depending on what will be updated
+	@PutMapping("/update")
 	public ResponseEntity<String> updateUser(@RequestBody LinkedHashMap<String, String> body){
 		String email = body.get("email");
 		String firstName = body.get("firstName");
@@ -50,7 +50,7 @@ public class UserController {
 		return new ResponseEntity<>("User does not exists", HttpStatus.NOT_FOUND);
 	}
 	
-	@PutMapping("/update/address") //Might need adjustments to RequestBody depending on what will be updated
+	@PutMapping("/update/address")
 	public ResponseEntity<String> updateUserAddress(@RequestBody LinkedHashMap<String, String> body){
 		String email = body.get("email");
 		String streetAddress = body.get("streetAddress");

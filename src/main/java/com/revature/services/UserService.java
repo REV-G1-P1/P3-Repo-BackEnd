@@ -33,12 +33,13 @@ public class UserService {
         User tempUser = new User();
         if(tempOptionalUser.isPresent()) {
             tempUser = tempOptionalUser.get();
+            tempUser.setFirstName(firstName);
+    		tempUser.setLastName(lastName);
+    		tempUser.setPassword(password);
+    		
+    		return userRepository.save(tempUser);
         }
-		tempUser.setFirstName(firstName);
-		tempUser.setLastName(lastName);
-		tempUser.setPassword(password);
-		
-		return userRepository.save(tempUser);
+        return null;
 	}
 	
 	public User updateUserAddress(String email, String streetAddress, String streetAddressLine2, String city,
@@ -48,16 +49,17 @@ public class UserService {
         User tempUser = new User();
         if(tempOptionalUser.isPresent()) {
             tempUser = tempOptionalUser.get();
+            Address tempUserAddress = tempUser.getAddress();
+    		tempUserAddress.setStreetAddress(streetAddress);
+    		tempUserAddress.setStreetAddressLine2(streetAddressLine2);
+    		tempUserAddress.setCity(city);
+    		tempUserAddress.setState(state);
+    		tempUserAddress.setZipCode(zipCode);
+    		tempUser.setAddress(tempUserAddress);
+    		
+    		return userRepository.save(tempUser);
         }
-		Address tempUserAddress = tempUser.getAddress();
-		tempUserAddress.setStreetAddress(streetAddress);
-		tempUserAddress.setStreetAddressLine2(streetAddressLine2);
-		tempUserAddress.setCity(city);
-		tempUserAddress.setState(state);
-		tempUserAddress.setZipCode(zipCode);
-		tempUser.setAddress(tempUserAddress);
-		
-		return userRepository.save(tempUser);
+        return null;
 	}
 	
 	public User findUserByEmail(String email) {
