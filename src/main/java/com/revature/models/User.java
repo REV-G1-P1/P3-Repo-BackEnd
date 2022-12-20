@@ -44,7 +44,7 @@ public class User {
     @Column(length = 9, nullable = false)
     private Integer ssn;
 
-    @Column(name = "user_role", nullable = false)
+    @Column(name = "user_role")
     @Enumerated(EnumType.STRING)
     private UserRole userRole;
 

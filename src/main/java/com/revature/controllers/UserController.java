@@ -2,6 +2,7 @@ package com.revature.controllers;
 
 import java.util.LinkedHashMap;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -22,17 +23,16 @@ import com.revature.services.UserService;
 @CrossOrigin("http://localhost:3000/")
 public class UserController {
 	
+    @Autowired
 	private UserService userService;
-	
-	
+		
 	@PostMapping("/register")
     public ResponseEntity<String> createUser(@RequestBody User user){
         if(userService.findUserByEmail(user.getEmail()) == null){
             userService.createUser(user);
             return new ResponseEntity<>("User created successfully", HttpStatus.CREATED);
         }
-        else
-        	return new ResponseEntity<>("User already exists", HttpStatus.CONFLICT);
+        return new ResponseEntity<>("User already exists", HttpStatus.CONFLICT);
     }
 	
 	@PutMapping("/update") //Might need adjustments to RequestBody depending on what will be updated

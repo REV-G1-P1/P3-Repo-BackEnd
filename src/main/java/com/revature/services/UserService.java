@@ -1,17 +1,25 @@
 package com.revature.services;
 
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.revature.models.User;
+import com.revature.models.UserRole;
+import com.revature.repositories.UserRepository;
 
 @Service
 @Transactional
 public class UserService {
 
+    @Autowired
+    private UserRepository userRepository;
+
 	public User createUser(User user) {
-		// TODO Auto-generated method stub
-		return null;
+        user.setUserRole(UserRole.CUSTOMER);
+		return userRepository.save(user);
 	}
 
 	public User updateUser(String email, String firstName, String lastName, String password) {
@@ -26,8 +34,11 @@ public class UserService {
 	}
 	
 	public User findUserByEmail(String email) {
-		// TODO Auto-generated method stub
-		return null;
+        Optional<User> tempUser = userRepository.findUserByEmail(email);
+        if(tempUser.isPresent()) {
+            return tempUser.get();
+        }
+        return null;
 	}
 
 	public User findUserById(Integer id) {
