@@ -24,7 +24,11 @@ public class UserService {
 	}
 
 	public User updateUser(String email, String firstName, String lastName, String password) {
-		User tempUser = userRepository.findUserByEmail(email).get();
+		Optional<User> tempOptionalUser = userRepository.findUserByEmail(email);
+        User tempUser = new User();
+        if(tempOptionalUser.isPresent()) {
+            tempUser = tempOptionalUser.get();
+        }
 		tempUser.setFirstName(firstName);
 		tempUser.setLastName(lastName);
 		tempUser.setPassword(password);
@@ -35,7 +39,11 @@ public class UserService {
 	public User updateUserAddress(String email, String streetAddress, String streetAddressLine2, String city,
 			String state, Integer zipCode) {
 		
-		User tempUser = userRepository.findUserByEmail(email).get();
+		Optional<User> tempOptionalUser = userRepository.findUserByEmail(email);
+        User tempUser = new User();
+        if(tempOptionalUser.isPresent()) {
+            tempUser = tempOptionalUser.get();
+        }
 		Address tempUserAddress = tempUser.getAddress();
 		tempUserAddress.setStreetAddress(streetAddress);
 		tempUserAddress.setStreetAddressLine2(streetAddressLine2);
