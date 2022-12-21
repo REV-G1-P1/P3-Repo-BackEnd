@@ -25,6 +25,8 @@ public class UserService {
 	public User createUser(User user) {
         user.setUserRole(UserRole.CUSTOMER);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setFailedLoginAttempts(0);
+        user.setUserAccountLocked(false);
 		return userRepository.save(user);
 	}
 

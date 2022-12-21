@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.revature.models.AccountInformation;
+import com.revature.models.AccountType;
 import com.revature.models.User;
 import com.revature.repositories.AccountInformationRepository;
 
@@ -17,10 +18,14 @@ public class AccountInformationService {
 	@Autowired
 	private AccountInformationRepository accountInformationRepository;
 
-	public AccountInformation createAccount(AccountInformation account) {
-		int random = (int) ((Math.random() * (99999999 - 11111111)) + 11111111);
-		account.setAccountNumber(random);
-		account.setRoutingNumber(876389223);
+	public AccountInformation createAccount(AccountType accountType) {
+        AccountInformation account = new AccountInformation();
+		int randomAccount = (int) ((Math.random() * (99999999 - 11111111)) + 11111111);
+        double randomBalance = Math.round(((Math.random() * (250000 - 100)) + 100) * 100.0) / 100.0;
+		account.setAccountNumber(randomAccount);
+		account.setRoutingNumber(867530900);
+        account.setBalance(randomBalance);
+        account.setAccountType(accountType);
 		return accountInformationRepository.save(account);
 	}
 

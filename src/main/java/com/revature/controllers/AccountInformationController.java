@@ -26,10 +26,10 @@ public class AccountInformationController {
 	private AccountInformationService accountInformationService;
 	
 	
-	@PostMapping("/create")
-    public ResponseEntity<AccountInformation> createAccount(@RequestBody AccountInformation account){
-		return new ResponseEntity<>(accountInformationService.createAccount(account), HttpStatus.CREATED);
-    }
+	// @PostMapping("/create")
+    // public ResponseEntity<AccountInformation> createAccount(@RequestBody AccountInformation account){
+	// 	return new ResponseEntity<>(accountInformationService.createAccount(account), HttpStatus.CREATED);
+    // }
 	
 	@PutMapping("/update/nickname")
 	public ResponseEntity<String> updateAccountName(@RequestBody LinkedHashMap<String, String> body){

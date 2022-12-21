@@ -51,6 +51,12 @@ public class User {
     @Column(nullable = false)
     private String password;
 
+    @Column(name = "failed_login_attempts")
+    private Integer failedLoginAttempts;
+
+    @Column(name = "user_account_locked")
+    private boolean userAccountLocked;
+
     @OneToOne(targetEntity = Address.class, cascade = { CascadeType.ALL}, orphanRemoval = true)
     @JoinTable(name = "User_Address", joinColumns = { @JoinColumn(name = "user_id")}, inverseJoinColumns = { @JoinColumn(name = "address_id") })
     private Address address;
