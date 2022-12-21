@@ -29,10 +29,17 @@ public class LoginLogoutService {
 
     public User login(User user) {
         Optional<User> tempUser = userRepository.findUserByEmail(user.getEmail());
-        if (tempUser.isPresent()) {
+        if (tempUser.isPresent() && !tempUser.get().isUserAccountLocked()) {
             if (passwordEncoder.matches(user.getPassword(), tempUser.get().getPassword())) {
+                tempUser.get().setFailedLoginAttempts(0);
+                userRepository.save(tempUser.get());
                 return tempUser.get();
             } else {
+                tempUser.get().setFailedLoginAttempts(tempUser.get().getFailedLoginAttempts() + 1);
+                if(tempUser.get().getFailedLoginAttempts() == 3) {
+                    tempUser.get().setUserAccountLocked(true);
+                }
+                userRepository.save(tempUser.get());
                 return null;
             }
         } else {
