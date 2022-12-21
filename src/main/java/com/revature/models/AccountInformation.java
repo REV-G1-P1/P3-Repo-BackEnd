@@ -34,8 +34,5 @@ public class AccountInformation {
 
     @Column(name = "balance", nullable = false)
     private Double balance;
-
-    @Column(name = "account_name", length = 40)
-    private String accountName;
-
+    
 }
