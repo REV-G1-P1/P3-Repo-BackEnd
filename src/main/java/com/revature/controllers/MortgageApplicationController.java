@@ -36,7 +36,7 @@ public class MortgageApplicationController {
 	public ResponseEntity<String> approveOrDenyMortgage(@PathVariable Integer applicationId, @RequestBody String status, User user) {
 		if(mortgageApplicationService.findMortgageByApplicationId(applicationId) != null 
 				&& mortgageApplicationService.findMortgageByApplicationId(applicationId).getStatus().equals(LoanStatus.PENDING) 
-				&& user.getUserRole().equals("manager")) {
+				&& user.getUserRole().equals("MANAGER")) {
 			mortgageApplicationService.approveDenyMortgage(applicationId, status);
 			return new ResponseEntity<>("Mortgage application processing successful", HttpStatus.OK);
 		}
