@@ -59,9 +59,4 @@ public class AccountInformationService {
         return null;
 	}
 
-	public void deleteAccount(Integer accountNumber) {
-		accountInformationRepository.deleteById(accountNumber);
-		
-	}
-
 }

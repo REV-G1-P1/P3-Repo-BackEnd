@@ -87,15 +87,5 @@ public class UserController {
         }
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
-	
-	@DeleteMapping("/delete/{id}")
-	public ResponseEntity<String> deleteUserById(@PathVariable Integer id) {
-        if(userService.findUserById(id) == null){
-            return new ResponseEntity<>("User does not exists", HttpStatus.NOT_FOUND);
-        } else {
-        	userService.deleteUser(id);
-            return new ResponseEntity<>("User has been deleted", HttpStatus.OK);
-        }
-    }
 
 }
