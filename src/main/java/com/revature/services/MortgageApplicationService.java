@@ -28,8 +28,8 @@ public class MortgageApplicationService {
 		if(tempOptionalMortgageApplication.isPresent()) {
 			tempMortgageApplication = tempOptionalMortgageApplication.get();
 			
-			if(status.toUpperCase() == "APPROVED") tempMortgageApplication.setStatus(LoanStatus.APPROVED);
-			if(status.toUpperCase() == "DENIED") tempMortgageApplication.setStatus(LoanStatus.DENIED);
+			if(status.toUpperCase().equals("APPROVED")) tempMortgageApplication.setStatus(LoanStatus.APPROVED);
+			if(status.toUpperCase().equals("DENIED")) tempMortgageApplication.setStatus(LoanStatus.DENIED);
 				
 			return mortgageApplicationRepository.save(tempMortgageApplication);
 		}

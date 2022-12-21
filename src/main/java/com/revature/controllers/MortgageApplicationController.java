@@ -32,7 +32,6 @@ public class MortgageApplicationController {
 		return new ResponseEntity<>(mortgageApplicationService.createMortgage(mortgage), HttpStatus.CREATED);
     }
 	
-	//Keep an eye for testing user role
 	@PutMapping("/process/{applicationId}")
 	public ResponseEntity<String> approveOrDenyMortgage(@PathVariable Integer applicationId, @RequestBody String status, User user) {
 		if(mortgageApplicationService.findMortgageByApplicationId(applicationId) != null 
