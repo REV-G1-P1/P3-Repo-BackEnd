@@ -30,40 +30,11 @@ public class UserService {
 		return userRepository.save(user);
 	}
 
-	public User updateUser(String email, String firstName, String lastName, String password) {
-		Optional<User> tempOptionalUser = userRepository.findUserByEmail(email);
-        User tempUser = new User();
-        if(tempOptionalUser.isPresent()) {
-            tempUser = tempOptionalUser.get();
-            tempUser.setFirstName(firstName);
-    		tempUser.setLastName(lastName);
-    		tempUser.setPassword(password);
-    		
-    		return userRepository.save(tempUser);
-        }
-        return null;
+	public User updateUser(User user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        return userRepository.save(user);
 	}
-	
-	public User updateUserAddress(String email, String streetAddress, String streetAddressLine2, String city,
-			String state, Integer zipCode) {
-		
-		Optional<User> tempOptionalUser = userRepository.findUserByEmail(email);
-        User tempUser = new User();
-        if(tempOptionalUser.isPresent()) {
-            tempUser = tempOptionalUser.get();
-            Address tempUserAddress = tempUser.getAddress();
-    		tempUserAddress.setStreetAddress(streetAddress);
-    		tempUserAddress.setStreetAddressLine2(streetAddressLine2);
-    		tempUserAddress.setCity(city);
-    		tempUserAddress.setState(state);
-    		tempUserAddress.setZipCode(zipCode);
-    		tempUser.setAddress(tempUserAddress);
-    		
-    		return userRepository.save(tempUser);
-        }
-        return null;
-	}
-	
+
 	public User findUserByEmail(String email) {
         Optional<User> tempUser = userRepository.findUserByEmail(email);
         if(tempUser.isPresent()) {

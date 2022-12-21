@@ -35,7 +35,7 @@ public class UserController {
 	private AccountInformationService accountInformationService;
 		
 	@PostMapping("/register")
-    public ResponseEntity<String> createUser(@RequestBody User user){
+    public ResponseEntity<String> createUser(@RequestBody User user) {
         if(userService.findUserByEmail(user.getEmail()) == null && userService.findUserBySSN(user.getSSN()) == null){
             List<AccountInformation> accounts = new ArrayList<>();
             accounts.add(accountInformationService.createAccount(AccountType.CHECKING));
@@ -50,31 +50,24 @@ public class UserController {
     }
 	
 	@PutMapping("/update")
-	public ResponseEntity<String> updateUser(@RequestBody LinkedHashMap<String, String> body){
-		String email = body.get("email");
-		String firstName = body.get("firstName");
-		String lastName = body.get("lastName");
-		String password = body.get("password");
-		
-		if(userService.findUserByEmail(email) != null){
-            userService.updateUser(email, firstName, lastName, password);
+	public ResponseEntity<String> updateUser(@RequestBody User user) {
+        if(userService.findUserByEmail(user.getEmail()) != null) {
+            User tempUser = userService.findUserByEmail(user.getEmail());
+            if(user.getAddress() != null) {
+                tempUser.setAddress(user.getAddress());
+            }
+            if(user.getFirstName() != null) {
+                tempUser.setFirstName(user.getFirstName());
+            }
+            if(user.getLastName() != null) {
+                tempUser.setLastName(user.getLastName());
+            }
+            if(user.getPassword() != null) {
+                tempUser.setPassword(user.getPassword());
+            }
+            userService.updateUser(tempUser);
+
             return new ResponseEntity<>("User updated successfully", HttpStatus.OK);
-        }
-		return new ResponseEntity<>("User does not exists", HttpStatus.NOT_FOUND);
-	}
-	
-	@PutMapping("/update/address")
-	public ResponseEntity<String> updateUserAddress(@RequestBody LinkedHashMap<String, String> body){
-		String email = body.get("email");
-		String streetAddress = body.get("streetAddress");
-		String streetAddressLine2 = body.get("streetAddressLine2");
-		String city = body.get("city");
-		String state = body.get("state");
-		Integer zipCode = Integer.parseInt(body.get("zipCode"));
-		
-		if(userService.findUserByEmail(email) != null){
-            userService.updateUserAddress(email, streetAddress, streetAddressLine2, city, state, zipCode);
-            return new ResponseEntity<>("User address updated successfully", HttpStatus.OK);
         }
 		return new ResponseEntity<>("User does not exists", HttpStatus.NOT_FOUND);
 	}
