@@ -62,14 +62,5 @@ public class AccountInformationController {
         return new ResponseEntity<>(ai, HttpStatus.OK);
     }
 	
-	@DeleteMapping("/delete")
-	public ResponseEntity<String> deleteAccountByAccountNumber(@RequestBody Integer accountNumber) {
-        if(accountInformationService.findAccountByAccountNumber(accountNumber) == null){
-            return new ResponseEntity<>("Account does not exists", HttpStatus.NOT_FOUND);
-        } else {
-        	accountInformationService.deleteAccount(accountNumber);
-            return new ResponseEntity<>("Account has been deleted", HttpStatus.OK);
-        }
-    }
 
 }

@@ -44,9 +44,4 @@ public class MortgageApplicationService {
 		return null;
 	}
 
-	public void deleteMortgage(Integer applicationId) {
-		mortgageApplicationRepository.deleteById(applicationId);
-		
-	}
-
 }

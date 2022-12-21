@@ -80,11 +80,6 @@ public class UserService {
         return null;
 	}
 
-	public void deleteUser(Integer id) {
-		userRepository.deleteById(id);
-		
-	}
-
     public User findUserBySSN(Integer ssn) {
         Optional<User> tempUser = userRepository.findUserBySSN(ssn);
         if(tempUser.isPresent()) {
