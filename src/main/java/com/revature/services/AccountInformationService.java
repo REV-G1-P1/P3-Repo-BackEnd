@@ -8,7 +8,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.revature.models.AccountInformation;
 import com.revature.models.AccountType;
-import com.revature.models.User;
 import com.revature.repositories.AccountInformationRepository;
 
 @Service
@@ -27,17 +26,6 @@ public class AccountInformationService {
         account.setBalance(randomBalance);
         account.setAccountType(accountType);
 		return accountInformationRepository.save(account);
-	}
-
-	public AccountInformation updateAccountName(Integer accountNumber, String accountName) {
-		Optional<AccountInformation> tempOptionalAccountInfo = accountInformationRepository.findById(accountNumber);
-		AccountInformation tempAccountInfo = new AccountInformation();
-		if(tempOptionalAccountInfo.isPresent()) {
-			tempAccountInfo = tempOptionalAccountInfo.get();
-			tempAccountInfo.setAccountName(accountName);
-			return accountInformationRepository.save(tempAccountInfo);
-		}
-		return null;
 	}
 	
 	public AccountInformation updateAccountBalance(Integer accountNumber, Double balance) {

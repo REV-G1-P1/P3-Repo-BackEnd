@@ -7,7 +7,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.revature.models.Address;
 import com.revature.models.User;
 import com.revature.models.UserRole;
 import com.revature.repositories.UserRepository;
