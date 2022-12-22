@@ -1,5 +1,6 @@
 package com.revature.services;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +9,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.revature.models.LoanStatus;
 import com.revature.models.MortgageApplication;
+import com.revature.models.User;
 import com.revature.repositories.MortgageApplicationRepository;
+import com.revature.repositories.UserRepository;
 
 @Service
 @Transactional
@@ -16,10 +19,21 @@ public class MortgageApplicationService {
 	
 	@Autowired
 	private MortgageApplicationRepository mortgageApplicationRepository;
+	
+	@Autowired
+    private UserRepository userRepository;
 
-	public MortgageApplication createMortgage(MortgageApplication mortgage) {
+	public void createMortgage(MortgageApplication mortgage, User user) {
 		mortgage.setStatus(LoanStatus.PENDING);
-		return mortgageApplicationRepository.save(mortgage);
+		List<MortgageApplication> applications = user.getMortgageApplication();
+		applications.add(mortgage);
+		user.setMortgageApplication(applications);
+		userRepository.save(user);
+	}
+	
+	public void createMortgage(MortgageApplication mortgage) {
+		mortgage.setStatus(LoanStatus.PENDING);
+		mortgageApplicationRepository.save(mortgage);
 	}
 	
 	public MortgageApplication approveDenyMortgage(Integer applicationId, String status) {

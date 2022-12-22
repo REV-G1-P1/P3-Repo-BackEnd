@@ -17,7 +17,6 @@ Just like above in Update Name, sending only numbers (without " ") still works, 
 ## Mortgage Application
 
 
-
 ## Log-In/Log-Out
 ### Log In
 Repeated Log-ins return the same message (cookie) even when logging in with different accounts

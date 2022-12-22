@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.revature.models.AccountInformation;
 import com.revature.models.AccountType;
+import com.revature.models.MortgageApplication;
 import com.revature.models.User;
 import com.revature.services.AccountInformationService;
 import com.revature.services.UserService;
@@ -79,6 +80,16 @@ public class UserController {
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 	
-	//Add get all mortgages applications
+	@GetMapping("/get/mortgages/{id}")
+	public ResponseEntity<List<MortgageApplication>> getMortgageApplications(@PathVariable Integer id){
+		User user = userService.findUserById(id);
+		if(user != null){
+			List<MortgageApplication> applications = new ArrayList<>();
+			applications.addAll(user.getMortgageApplication());
+			return new ResponseEntity<>(applications, HttpStatus.OK);
+            
+        }
+		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+	}
 
 }
