@@ -2,6 +2,9 @@ package com.revature.controllers;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,11 +26,14 @@ import com.revature.services.UserService;
 
 @RestController
 @RequestMapping("/users")
-@CrossOrigin("http://localhost:3000/")
+@CrossOrigin(origins = "http://localhost:3000/", allowCredentials = "true")
 public class UserController {
 	
     @Autowired
 	private UserService userService;
+
+    @Autowired
+    private HttpSession session;
 
     @Autowired
 	private AccountInformationService accountInformationService;
@@ -48,7 +54,6 @@ public class UserController {
             accounts.add(accountInformationService.createAccount(AccountType.SAVINGS));
             user.setAccountInformation(accounts);
             userService.createUser(user);
-
 
             return new ResponseEntity<>("User created successfully", HttpStatus.CREATED);
         }
@@ -80,11 +85,24 @@ public class UserController {
 	
 	@GetMapping("/get/{id}")
     public ResponseEntity<User> findUserById(@PathVariable Integer id) {
-        User user = userService.findUserById(id);
-        if(user == null){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        Optional<User> user = userService.findUserById(id);
+        if(user.isPresent()) {
+            return new ResponseEntity<>(user.get(), HttpStatus.OK);
         }
-        return new ResponseEntity<>(user, HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    @GetMapping("/get/currentuser")
+    public ResponseEntity<User> findCurrentUser() {
+        try {
+            Optional<User> user = userService.findUserById(Integer.valueOf(session.getAttribute("CurrentUser").toString()));
+            if(user.isPresent()) {
+                return new ResponseEntity<>(user.get(), HttpStatus.OK);
+            }
+        } catch(Exception e) {
+
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 	
 	//Add get all mortgages applications

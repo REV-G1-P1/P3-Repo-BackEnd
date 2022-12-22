@@ -42,12 +42,12 @@ public class UserService {
         return null;
 	}
 
-	public User findUserById(Integer id) {
+	public Optional<User> findUserById(Integer id) {
 		Optional<User> tempUser = userRepository.findById(id);
 		if(tempUser.isPresent()) {
-            return tempUser.get();
+            return tempUser;
         }
-        return null;
+        return Optional.empty();
 	}
 
     public User findUserBySSN(Integer ssn) {
