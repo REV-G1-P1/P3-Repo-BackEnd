@@ -1,0 +1,27 @@
+{"properties": [
+  {
+    "name": "server.servlet.session.cookie.same-site",
+    "type": "java.lang.String",
+    "description": "A description for 'server.servlet.session.cookie.same-site'"
+  },
+  {
+    "name": "server.cors.allowed-origins",
+    "type": "java.lang.String",
+    "description": "A description for 'server.cors.allowed-origins'"
+  },
+  {
+    "name": "server.cors.allowed-methods",
+    "type": "java.lang.String",
+    "description": "A description for 'server.cors.allowed-methods'"
+  },
+  {
+    "name": "server.cors.allowed-headers",
+    "type": "java.lang.String",
+    "description": "A description for 'server.cors.allowed-headers'"
+  },
+  {
+    "name": "server.cors.allow-credentials",
+    "type": "java.lang.String",
+    "description": "A description for 'server.cors.allow-credentials'"
+  }
+]}

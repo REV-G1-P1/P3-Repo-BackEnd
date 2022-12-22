@@ -8,8 +8,3 @@
             - Created Successfully
         - Input State too long
             - 500 : Internal Server Error
-
-    - /users/get/{id}
-        - Get User
-            - Sensitive Information Needs to be Null
-    

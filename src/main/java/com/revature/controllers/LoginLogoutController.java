@@ -21,19 +21,28 @@ import com.revature.services.LoginLogoutService;
 
 @RestController
 @RequestMapping("/")
-@CrossOrigin("http://localhost:3000/")
+@CrossOrigin(origins = "http://localhost:3000/", allowCredentials = "true")
 public class LoginLogoutController {
     
     @Autowired
     private LoginLogoutService loginLogoutService;
 
+    @Autowired
+    private HttpSession session;
+
+    @GetMapping
+    public String hello() {
+        return String.valueOf(session.getAttribute("CurrentUser")) + " --------------------------------------------";
+    }
+
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> login(@RequestBody User user, HttpSession session) {
+    public ResponseEntity<LoginResponse> login(@RequestBody User user) {
         LoginResponse tempUser = loginLogoutService.login(user);
 
         if(tempUser.getUser() != null){
             session.setAttribute("CurrentUser", tempUser.getUser().getUserId());
             LoginResponse response = new LoginResponse(tempUser.getUser(), Base64.getEncoder().encodeToString(session.getId().getBytes()));
+            System.out.println(String.valueOf(session.getAttribute("CurrentUser")) + " --------------------------------------------");
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
         if(tempUser.getMessage().equals("Account Locked")) {
@@ -45,8 +54,11 @@ public class LoginLogoutController {
 
     @GetMapping("/log-out/{cookieId}")
     public ResponseEntity<String> logout(@PathVariable String cookieId, HttpSession session){
+        System.out.println(String.valueOf(session.getAttribute("CurrentUser") + "Before nulled value"));
         byte[] decodedCookieIdBytes = Base64.getDecoder().decode(cookieId);
         String decodedCookieId = new String(decodedCookieIdBytes);
+        session.setAttribute("CurrentUser", null);
+        System.out.println(String.valueOf(session.getAttribute("CurrentUser") + "After nulled value"));
         loginLogoutService.removeSessionById(decodedCookieId);
         return new ResponseEntity<>("Logged out Successfully", HttpStatus.OK);
     }

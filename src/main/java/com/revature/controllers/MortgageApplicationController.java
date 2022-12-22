@@ -22,7 +22,7 @@ import com.revature.services.UserService;
 
 @RestController
 @RequestMapping("/mortgages")
-@CrossOrigin("http://localhost:3000/")
+@CrossOrigin(origins = "http://localhost:3000/", allowCredentials = "true")
 public class MortgageApplicationController {
 	
 	@Autowired
