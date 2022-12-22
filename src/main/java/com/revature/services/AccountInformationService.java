@@ -20,7 +20,7 @@ public class AccountInformationService {
 	public AccountInformation createAccount(AccountType accountType) {
         AccountInformation account = new AccountInformation();
 		int randomAccount = (int) ((Math.random() * (99999999 - 11111111)) + 11111111);
-        double randomBalance = Math.round(((Math.random() * (250000 - 100)) + 100) * 100.0) / 100.0;
+        double randomBalance = Math.round(((Math.random() * (25000 - 100)) + 100) * 100.0) / 100.0;
 		account.setAccountNumber(randomAccount);
 		account.setRoutingNumber(867530900);
         account.setBalance(randomBalance);

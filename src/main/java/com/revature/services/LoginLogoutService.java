@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.revature.models.LoginResponse;
 import com.revature.models.User;
 import com.revature.repositories.UserRepository;
 
@@ -27,23 +28,32 @@ public class LoginLogoutService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public User login(User user) {
+    public LoginResponse login(User user) {
         Optional<User> tempUser = userRepository.findUserByEmail(user.getEmail());
-        if (tempUser.isPresent() && !tempUser.get().isUserAccountLocked()) {
+        LoginResponse loginResponse = new LoginResponse();
+        if(tempUser.isPresent() && tempUser.get().isUserAccountLocked()) {
+            loginResponse.setMessage("Account Locked");
+            return loginResponse;
+        }
+        if (tempUser.isPresent()) {
             if (passwordEncoder.matches(user.getPassword(), tempUser.get().getPassword())) {
                 tempUser.get().setFailedLoginAttempts(0);
                 userRepository.save(tempUser.get());
-                return tempUser.get();
+                loginResponse.setUser(tempUser.get());
+                loginResponse.setMessage("Login Successful");
+                return loginResponse;
             } else {
                 tempUser.get().setFailedLoginAttempts(tempUser.get().getFailedLoginAttempts() + 1);
                 if(tempUser.get().getFailedLoginAttempts() == 3) {
                     tempUser.get().setUserAccountLocked(true);
                 }
                 userRepository.save(tempUser.get());
-                return null;
+                loginResponse.setMessage("Login Failed");
+                return loginResponse;
             }
         } else {
-            return null;
+            loginResponse.setMessage("Login Failed");
+            return loginResponse;
         }
     }
 

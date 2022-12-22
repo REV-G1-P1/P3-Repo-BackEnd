@@ -29,14 +29,18 @@ public class LoginLogoutController {
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@RequestBody User user, HttpSession session) {
-        User tempUser = loginLogoutService.login(user);
-        if(tempUser != null){
-            session.setAttribute("CurrentUser", tempUser.getUserId());
-            LoginResponse response = new LoginResponse(tempUser, Base64.getEncoder().encodeToString(session.getId().getBytes()));
+        LoginResponse tempUser = loginLogoutService.login(user);
+        if(tempUser.getUser() != null){
+            session.setAttribute("CurrentUser", tempUser.getUser().getUserId());
+            LoginResponse response = new LoginResponse(tempUser.getUser(), Base64.getEncoder().encodeToString(session.getId().getBytes()));
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
-        return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        if(tempUser.getMessage().equals("Account Locked")) {
+            return new ResponseEntity<>(tempUser, HttpStatus.FORBIDDEN);
+        }
+        return new ResponseEntity<>(tempUser, HttpStatus.UNAUTHORIZED);
     }
+
 
     @GetMapping("/log-out/{cookieId}")
     public ResponseEntity<String> logout(@PathVariable String cookieId, HttpSession session){
