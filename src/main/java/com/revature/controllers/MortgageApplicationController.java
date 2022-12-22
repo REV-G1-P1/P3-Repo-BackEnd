@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.revature.models.LoanStatus;
@@ -17,6 +18,7 @@ import com.revature.models.MortgageApplication;
 import com.revature.models.User;
 import com.revature.models.UserRole;
 import com.revature.services.MortgageApplicationService;
+import com.revature.services.UserService;
 
 @RestController
 @RequestMapping("/mortgages")
@@ -26,21 +28,42 @@ public class MortgageApplicationController {
 	@Autowired
 	private MortgageApplicationService mortgageApplicationService;
 	
+	@Autowired
+	private UserService userService;
 	
-	@PostMapping("/create")
-    public ResponseEntity<MortgageApplication> createMortgage(@RequestBody MortgageApplication mortgage){
-		return new ResponseEntity<>(mortgageApplicationService.createMortgage(mortgage), HttpStatus.CREATED);
+	@PostMapping("/create/{userId}")
+    public ResponseEntity<String> createMortgage(@PathVariable Integer userId, @RequestBody MortgageApplication mortgage){
+		// If userId = 0 = Guest
+		if(userId != 0) {
+			User user = userService.findUserById(userId);
+			mortgageApplicationService.createMortgage(mortgage, user);
+		}
+		else
+			mortgageApplicationService.createMortgage(mortgage);
+		
+		return new ResponseEntity<>("Mortgage Application succesfully created", HttpStatus.CREATED);
     }
 	
 	@PutMapping("/process/{applicationId}")
-	public ResponseEntity<String> approveOrDenyMortgage(@PathVariable Integer applicationId, @RequestBody String status, User user) {
+	public ResponseEntity<String> approveOrDenyMortgage(@PathVariable Integer applicationId, @RequestBody String status, @RequestParam("userId") Integer userId) {
+		User user = userService.findUserById(userId);
 		if(mortgageApplicationService.findMortgageByApplicationId(applicationId) != null 
 				&& mortgageApplicationService.findMortgageByApplicationId(applicationId).getStatus().equals(LoanStatus.PENDING) 
 				&& user.getUserRole().equals(UserRole.MANAGER)) {
 			mortgageApplicationService.approveDenyMortgage(applicationId, status);
 			return new ResponseEntity<>("Mortgage application processing successful", HttpStatus.OK);
 		}
-		return new ResponseEntity<>("Mortgage application not found", HttpStatus.NOT_FOUND);
+		if(mortgageApplicationService.findMortgageByApplicationId(applicationId) == null) {
+			return new ResponseEntity<>("Mortgage application not found", HttpStatus.NOT_FOUND);
+		}
+		if(!user.getUserRole().equals(UserRole.MANAGER)) {
+			return new ResponseEntity<>("Not Authorized", HttpStatus.UNAUTHORIZED);
+		}
+		if(!mortgageApplicationService.findMortgageByApplicationId(applicationId).getStatus().equals(LoanStatus.PENDING)) {
+			return new ResponseEntity<>("Mortgage has already been processed", HttpStatus.UNAUTHORIZED);
+		}
+		
+		return new ResponseEntity<>("Error processing the mortgage", HttpStatus.BAD_REQUEST);
 	}
 	
 	@GetMapping("/get/{applicationId}")
