@@ -31,6 +31,14 @@ public class UserController {
 
     @Autowired
 	private AccountInformationService accountInformationService;
+
+    @PostMapping("/validate")
+    public ResponseEntity<String> validateUser(@RequestBody User user) {
+        if(userService.findUserByEmail(user.getEmail()) == null && userService.findUserBySSN(user.getSSN()) == null){
+            return new ResponseEntity<>("User is available", HttpStatus.OK);
+        }
+        return new ResponseEntity<>("User already exists", HttpStatus.CONFLICT);
+    }
 		
 	@PostMapping("/register")
     public ResponseEntity<String> createUser(@RequestBody User user) {
