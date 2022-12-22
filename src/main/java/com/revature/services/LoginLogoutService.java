@@ -39,7 +39,18 @@ public class LoginLogoutService {
             if (passwordEncoder.matches(user.getPassword(), tempUser.get().getPassword())) {
                 tempUser.get().setFailedLoginAttempts(0);
                 userRepository.save(tempUser.get());
-                loginResponse.setUser(tempUser.get());
+
+                User newUser = new User();
+
+                newUser.setFirstName(tempUser.get().getFirstName());
+                newUser.setLastName(tempUser.get().getLastName());
+                newUser.setAccountInformation(tempUser.get().getAccountInformation());
+                newUser.setMortgageApplication(tempUser.get().getMortgageApplication());
+                newUser.setUserId(tempUser.get().getUserId());
+                newUser.setAddress(tempUser.get().getAddress());
+                newUser.setUserRole(tempUser.get().getUserRole());
+
+                loginResponse.setUser(newUser);
                 loginResponse.setMessage("Login Successful");
                 return loginResponse;
             } else {

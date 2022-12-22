@@ -30,6 +30,7 @@ public class LoginLogoutController {
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@RequestBody User user, HttpSession session) {
         LoginResponse tempUser = loginLogoutService.login(user);
+
         if(tempUser.getUser() != null){
             session.setAttribute("CurrentUser", tempUser.getUser().getUserId());
             LoginResponse response = new LoginResponse(tempUser.getUser(), Base64.getEncoder().encodeToString(session.getId().getBytes()));
