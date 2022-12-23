@@ -24,7 +24,12 @@ public class MortgageApplicationService {
     private UserRepository userRepository;
 
 	public void createMortgage(MortgageApplication mortgage, User user) {
+        int randomId = (int) ((Math.random() * (99999999 - 11111111)) + 11111111);
+        mortgage.setApplicationId(randomId);
 		mortgage.setStatus(LoanStatus.PENDING);
+        mortgage.setFirstName(user.getFirstName());
+        mortgage.setLastName(user.getLastName());
+        mortgage.setSsn(user.getSSN());
 		List<MortgageApplication> applications = user.getMortgageApplication();
 		applications.add(mortgage);
 		user.setMortgageApplication(applications);
@@ -32,6 +37,8 @@ public class MortgageApplicationService {
 	}
 	
 	public void createMortgage(MortgageApplication mortgage) {
+        int randomId = (int) ((Math.random() * (99999999 - 11111111)) + 11111111);
+        mortgage.setApplicationId(randomId);
 		mortgage.setStatus(LoanStatus.PENDING);
 		mortgageApplicationRepository.save(mortgage);
 	}
