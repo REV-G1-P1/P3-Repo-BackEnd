@@ -2,6 +2,9 @@ package com.revature.services;
 
 import java.util.Optional;
 
+import javax.persistence.EntityManager;
+
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

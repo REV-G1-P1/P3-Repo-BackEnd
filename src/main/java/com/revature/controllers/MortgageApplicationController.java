@@ -1,5 +1,9 @@
 package com.revature.controllers;
 
+import java.util.Optional;
+
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,39 +34,51 @@ public class MortgageApplicationController {
 	
 	@Autowired
 	private UserService userService;
+
+    @Autowired
+    private HttpSession session;
 	
-	@PostMapping("/create/{userId}")
-    public ResponseEntity<String> createMortgage(@PathVariable Integer userId, @RequestBody MortgageApplication mortgage){
-		// If userId = 0 = Guest
-		if(userId != 0) {
-			User user = userService.findUserById(userId);
-			mortgageApplicationService.createMortgage(mortgage, user);
-		}
-		else
-			mortgageApplicationService.createMortgage(mortgage);
-		
+	@PostMapping("/create")
+    public ResponseEntity<String> createMortgage(@RequestBody MortgageApplication mortgage){
+        if(session.getAttribute("CurrentUser") == null) {
+            mortgageApplicationService.createMortgage(mortgage);
+        } else {
+            Integer userId = Integer.valueOf(session.getAttribute("CurrentUser").toString());
+            Optional<User> user = userService.findUserById(userId);
+            if(user.isPresent()) {
+                mortgageApplicationService.createMortgage(mortgage, user.get());
+            } else {
+                return new ResponseEntity<>("Mortgage Application Failed to Create", HttpStatus.CONFLICT);
+            }
+        }
 		return new ResponseEntity<>("Mortgage Application succesfully created", HttpStatus.CREATED);
     }
 	
 	@PutMapping("/process/{applicationId}")
-	public ResponseEntity<String> approveOrDenyMortgage(@PathVariable Integer applicationId, @RequestBody String status, @RequestParam("userId") Integer userId) {
-		User user = userService.findUserById(userId);
-		if(mortgageApplicationService.findMortgageByApplicationId(applicationId) != null 
-				&& mortgageApplicationService.findMortgageByApplicationId(applicationId).getStatus().equals(LoanStatus.PENDING) 
-				&& user.getUserRole().equals(UserRole.MANAGER)) {
-			mortgageApplicationService.approveDenyMortgage(applicationId, status);
-			return new ResponseEntity<>("Mortgage application processing successful", HttpStatus.OK);
-		}
-		if(mortgageApplicationService.findMortgageByApplicationId(applicationId) == null) {
-			return new ResponseEntity<>("Mortgage application not found", HttpStatus.NOT_FOUND);
-		}
-		if(!user.getUserRole().equals(UserRole.MANAGER)) {
-			return new ResponseEntity<>("Not Authorized", HttpStatus.UNAUTHORIZED);
-		}
-		if(!mortgageApplicationService.findMortgageByApplicationId(applicationId).getStatus().equals(LoanStatus.PENDING)) {
-			return new ResponseEntity<>("Mortgage has already been processed", HttpStatus.UNAUTHORIZED);
-		}
-		
+	public ResponseEntity<String> approveOrDenyMortgage(@PathVariable Integer applicationId, @RequestBody String status) {
+        if(session.getAttribute("CurrentUser") == null) {
+            return new ResponseEntity<>("Error processing the mortgage", HttpStatus.BAD_REQUEST);
+        } else {
+            Integer userId = Integer.valueOf(session.getAttribute("CurrentUser").toString());
+            Optional<User> tempUser = userService.findUserById(userId);
+            if(tempUser.isPresent()) {
+                if(mortgageApplicationService.findMortgageByApplicationId(applicationId) != null 
+                        && mortgageApplicationService.findMortgageByApplicationId(applicationId).getStatus().equals(LoanStatus.PENDING) 
+                        && tempUser.get().getUserRole().equals(UserRole.MANAGER)) {
+                    mortgageApplicationService.approveDenyMortgage(applicationId, status);
+                    return new ResponseEntity<>("Mortgage application processing successful", HttpStatus.OK);
+                }
+                if(mortgageApplicationService.findMortgageByApplicationId(applicationId) == null) {
+                    return new ResponseEntity<>("Mortgage application not found", HttpStatus.NOT_FOUND);
+                }
+                if(!tempUser.get().getUserRole().equals(UserRole.MANAGER)) {
+                    return new ResponseEntity<>("Not Authorized", HttpStatus.UNAUTHORIZED);
+                }
+                if(!mortgageApplicationService.findMortgageByApplicationId(applicationId).getStatus().equals(LoanStatus.PENDING)) {
+                    return new ResponseEntity<>("Mortgage has already been processed", HttpStatus.FORBIDDEN);
+                }
+            }
+        }
 		return new ResponseEntity<>("Error processing the mortgage", HttpStatus.BAD_REQUEST);
 	}
 	

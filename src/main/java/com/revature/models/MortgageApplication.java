@@ -22,7 +22,6 @@ public class MortgageApplication {
     
     @Id
     @Column(name = "application_id", length = 8)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer applicationId;
 
     @Column(name = "first_name", length = 30, nullable = false)

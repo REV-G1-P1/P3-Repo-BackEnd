@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import javax.persistence.EntityManager;
 import javax.servlet.http.HttpSession;
 
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,6 +40,9 @@ public class UserController {
 
     @Autowired
 	private AccountInformationService accountInformationService;
+
+    @Autowired
+    private EntityManager entityManager;
 
     @PostMapping("/validate")
     public ResponseEntity<String> validateUser(@RequestBody User user) {
@@ -88,6 +93,10 @@ public class UserController {
     public ResponseEntity<User> findUserById(@PathVariable Integer id) {
         Optional<User> user = userService.findUserById(id);
         if(user.isPresent()) {
+            Hibernate.initialize(user.get().getAccountInformation());
+            Hibernate.initialize(user.get().getMortgageApplication());
+            entityManager.detach(user.get());
+            user.get().setPassword(null);
             return new ResponseEntity<>(user.get(), HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -98,6 +107,10 @@ public class UserController {
         try {
             Optional<User> user = userService.findUserById(Integer.valueOf(session.getAttribute("CurrentUser").toString()));
             if(user.isPresent()) {
+                Hibernate.initialize(user.get().getAccountInformation());
+                Hibernate.initialize(user.get().getMortgageApplication());
+                entityManager.detach(user.get());
+                user.get().setPassword(null);
                 return new ResponseEntity<>(user.get(), HttpStatus.OK);
             }
         } catch(Exception e) {
@@ -106,12 +119,12 @@ public class UserController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 	
-	@GetMapping("/get/mortgages/{id}")
-	public ResponseEntity<List<MortgageApplication>> getMortgageApplications(@PathVariable Integer id){
-		User user = userService.findUserById(id);
-		if(user != null){
+	@GetMapping("/get/mortgages/{userId}")
+	public ResponseEntity<List<MortgageApplication>> getApplicationsByUserId(@PathVariable Integer userId){
+		Optional<User> user = userService.findUserById(userId);
+		if(user.isPresent()){
 			List<MortgageApplication> applications = new ArrayList<>();
-			applications.addAll(user.getMortgageApplication());
+			applications.addAll(user.get().getMortgageApplication());
 			return new ResponseEntity<>(applications, HttpStatus.OK);
             
         }

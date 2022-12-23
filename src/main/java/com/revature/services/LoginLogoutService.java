@@ -49,6 +49,9 @@ public class LoginLogoutService {
                 newUser.setUserId(tempUser.get().getUserId());
                 newUser.setAddress(tempUser.get().getAddress());
                 newUser.setUserRole(tempUser.get().getUserRole());
+                newUser.setSSN(tempUser.get().getSSN());
+                newUser.setEmail(tempUser.get().getEmail());
+
 
                 loginResponse.setUser(newUser);
                 loginResponse.setMessage("Login Successful");

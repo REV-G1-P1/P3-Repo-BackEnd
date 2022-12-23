@@ -52,14 +52,11 @@ public class LoginLogoutController {
     }
 
 
-    @GetMapping("/log-out/{cookieId}")
-    public ResponseEntity<String> logout(@PathVariable String cookieId, HttpSession session){
+    @GetMapping("/log-out")
+    public ResponseEntity<String> logout(){
         System.out.println(String.valueOf(session.getAttribute("CurrentUser") + "Before nulled value"));
-        byte[] decodedCookieIdBytes = Base64.getDecoder().decode(cookieId);
-        String decodedCookieId = new String(decodedCookieIdBytes);
-        session.setAttribute("CurrentUser", null);
+        session.invalidate();
         System.out.println(String.valueOf(session.getAttribute("CurrentUser") + "After nulled value"));
-        loginLogoutService.removeSessionById(decodedCookieId);
         return new ResponseEntity<>("Logged out Successfully", HttpStatus.OK);
     }
 }
