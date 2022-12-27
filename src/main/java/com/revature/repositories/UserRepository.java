@@ -25,5 +25,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     @Query(value = "DELETE FROM spring_session WHERE session_id = ?1", nativeQuery = true)
     void removeSessionById(String cookieId);
 
+    Optional<User> findUserByLoginToken(Integer loginToken);
+
     
 }
