@@ -1,7 +1,5 @@
 package com.revature.controllers;
 
-import java.util.Base64;
-
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +7,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,7 +17,7 @@ import com.revature.models.User;
 import com.revature.services.LoginLogoutService;
 
 @RestController
-@RequestMapping("/")
+@RequestMapping("/login")
 @CrossOrigin(origins = "http://localhost:3000/", allowCredentials = "true")
 public class LoginLogoutController {
     
@@ -29,34 +26,35 @@ public class LoginLogoutController {
 
     @Autowired
     private HttpSession session;
-
-    @GetMapping
-    public String hello() {
-        return String.valueOf(session.getAttribute("CurrentUser")) + " --------------------------------------------";
-    }
-
-    @PostMapping("/login")
-    public ResponseEntity<LoginResponse> login(@RequestBody User user) {
+    
+    @PostMapping("/login-credentials")
+    public ResponseEntity<String> loginCredentials(@RequestBody User user) {
         LoginResponse tempUser = loginLogoutService.login(user);
-
+        
         if(tempUser.getUser() != null){
-            session.setAttribute("CurrentUser", tempUser.getUser().getUserId());
-            LoginResponse response = new LoginResponse(tempUser.getUser(), Base64.getEncoder().encodeToString(session.getId().getBytes()));
-            System.out.println(String.valueOf(session.getAttribute("CurrentUser")) + " --------------------------------------------");
-            return new ResponseEntity<>(response, HttpStatus.OK);
+            loginLogoutService.twoFactorAuthentication(tempUser.getUser());
+            return new ResponseEntity<>("Credentials Pass", HttpStatus.OK);
         }
         if(tempUser.getMessage().equals("Account Locked")) {
-            return new ResponseEntity<>(tempUser, HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>("Account Locked", HttpStatus.FORBIDDEN);
         }
-        return new ResponseEntity<>(tempUser, HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>("Failed to Login", HttpStatus.UNAUTHORIZED);
     }
-
+    
+    @PostMapping("/login-token")
+    public ResponseEntity<User> loginToken(@RequestBody Integer token) {
+        LoginResponse tempUser = loginLogoutService.loginToken(token);
+        if(tempUser.getUser() != null) {
+            session.setAttribute("CurrentUser", tempUser.getUser().getUserId());
+            session.setAttribute("CurrentUserRole", tempUser.getUser().getUserRole());
+            return new ResponseEntity<>(tempUser.getUser(), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(tempUser.getUser(), HttpStatus.NOT_FOUND);
+    }
 
     @GetMapping("/log-out")
     public ResponseEntity<String> logout(){
-        System.out.println(String.valueOf(session.getAttribute("CurrentUser") + "Before nulled value"));
         session.invalidate();
-        System.out.println(String.valueOf(session.getAttribute("CurrentUser") + "After nulled value"));
         return new ResponseEntity<>("Logged out Successfully", HttpStatus.OK);
     }
 }

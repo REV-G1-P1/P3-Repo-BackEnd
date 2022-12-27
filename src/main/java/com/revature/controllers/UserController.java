@@ -54,16 +54,21 @@ public class UserController {
 		
 	@PostMapping("/register")
     public ResponseEntity<String> createUser(@RequestBody User user) {
-        if(userService.findUserByEmail(user.getEmail()) == null && userService.findUserBySSN(user.getSSN()) == null){
-            List<AccountInformation> accounts = new ArrayList<>();
-            accounts.add(accountInformationService.createAccount(AccountType.CHECKING));
-            accounts.add(accountInformationService.createAccount(AccountType.SAVINGS));
-            user.setAccountInformation(accounts);
-            userService.createUser(user);
+        try {
+            if(userService.findUserByEmail(user.getEmail()) == null && userService.findUserBySSN(user.getSSN()) == null){
+                List<AccountInformation> accounts = new ArrayList<>();
+                accounts.add(accountInformationService.createAccount(AccountType.CHECKING));
+                accounts.add(accountInformationService.createAccount(AccountType.SAVINGS));
+                user.setAccountInformation(accounts);
+                userService.createUser(user);
 
-            return new ResponseEntity<>("User created successfully", HttpStatus.CREATED);
+                return new ResponseEntity<>("User created successfully", HttpStatus.CREATED);
+            }
+            return new ResponseEntity<>("User already exists", HttpStatus.CONFLICT);
+        } catch(Exception e) {
+            return new ResponseEntity<>("Error Registering User", HttpStatus.CONFLICT);
         }
-        return new ResponseEntity<>("User already exists", HttpStatus.CONFLICT);
+        
     }
 	
 	@PutMapping("/update")
@@ -95,6 +100,7 @@ public class UserController {
         if(user.isPresent()) {
             Hibernate.initialize(user.get().getAccountInformation());
             Hibernate.initialize(user.get().getMortgageApplication());
+            Hibernate.initialize(user.get().getTransactions());
             entityManager.detach(user.get());
             user.get().setPassword(null);
             return new ResponseEntity<>(user.get(), HttpStatus.OK);
@@ -109,18 +115,22 @@ public class UserController {
             if(user.isPresent()) {
                 Hibernate.initialize(user.get().getAccountInformation());
                 Hibernate.initialize(user.get().getMortgageApplication());
+                Hibernate.initialize(user.get().getTransactions());
                 entityManager.detach(user.get());
                 user.get().setPassword(null);
                 return new ResponseEntity<>(user.get(), HttpStatus.OK);
             }
         } catch(Exception e) {
-
+            e.printStackTrace();
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 	
 	@GetMapping("/get/mortgages/{userId}")
 	public ResponseEntity<List<MortgageApplication>> getApplicationsByUserId(@PathVariable Integer userId){
+        if(session.getAttribute("CurrentUserRole") != "MANAGER") {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
 		Optional<User> user = userService.findUserById(userId);
 		if(user.isPresent()){
 			List<MortgageApplication> applications = new ArrayList<>();
@@ -130,5 +140,4 @@ public class UserController {
         }
 		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 	}
-
 }

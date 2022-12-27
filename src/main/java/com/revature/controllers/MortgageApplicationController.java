@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.revature.models.LoanStatus;
@@ -40,6 +39,9 @@ public class MortgageApplicationController {
 	
 	@PostMapping("/create")
     public ResponseEntity<String> createMortgage(@RequestBody MortgageApplication mortgage){
+        if(session.getAttribute("CurrentUserRole") != "CUSTOMER") {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
         if(session.getAttribute("CurrentUser") == null) {
             mortgageApplicationService.createMortgage(mortgage);
         } else {
@@ -56,6 +58,9 @@ public class MortgageApplicationController {
 	
 	@PutMapping("/process/{applicationId}")
 	public ResponseEntity<String> approveOrDenyMortgage(@PathVariable Integer applicationId, @RequestBody String status) {
+        if(session.getAttribute("CurrentUserRole") != "MANAGER") {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
         if(session.getAttribute("CurrentUser") == null) {
             return new ResponseEntity<>("Error processing the mortgage", HttpStatus.BAD_REQUEST);
         } else {
@@ -84,6 +89,9 @@ public class MortgageApplicationController {
 	
 	@GetMapping("/get/{applicationId}")
     public ResponseEntity<MortgageApplication> findMortgageById(@PathVariable Integer applicationId) {
+        if(session.getAttribute("CurrentUserRole") != "MANAGER") {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
 		MortgageApplication ma = mortgageApplicationService.findMortgageByApplicationId(applicationId);
         if(ma == null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

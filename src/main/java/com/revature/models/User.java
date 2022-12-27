@@ -44,6 +44,9 @@ public class User {
     @Column(length = 9, nullable = false, unique = true)
     private Integer SSN;
 
+    @Column(name = "phone_number", nullable = false)
+    private Long phoneNumber;
+
     @Column(name = "user_role")
     @Enumerated(EnumType.STRING)
     private UserRole userRole;
@@ -57,15 +60,22 @@ public class User {
     @Column(name = "user_account_locked")
     private boolean userAccountLocked;
 
-    @OneToOne(targetEntity = Address.class, cascade = { CascadeType.ALL}, orphanRemoval = true)
-    @JoinTable(name = "User_Address", joinColumns = { @JoinColumn(name = "user_id")}, inverseJoinColumns = { @JoinColumn(name = "address_id") })
+    @Column(name = "login_token", unique = true)
+    private Integer loginToken;
+
+    @OneToOne(targetEntity = Address.class, cascade = { CascadeType.ALL }, orphanRemoval = true)
+    @JoinTable(name = "User_Address", joinColumns = { @JoinColumn(name = "user_id") }, inverseJoinColumns = { @JoinColumn(name = "address_id") })
     private Address address;
 
-    @OneToMany(targetEntity = AccountInformation.class, cascade = { CascadeType.ALL}, orphanRemoval = true)
-    @JoinTable(name = "User_Account", joinColumns = { @JoinColumn(name = "user_id")}, inverseJoinColumns = { @JoinColumn(name = "account_number") })
+    @OneToMany(targetEntity = AccountInformation.class, cascade = { CascadeType.ALL }, orphanRemoval = true)
+    @JoinTable(name = "User_Account", joinColumns = { @JoinColumn(name = "user_id") }, inverseJoinColumns = { @JoinColumn(name = "account_number") })
     private List<AccountInformation> accountInformation;
 
-    @OneToMany(targetEntity = MortgageApplication.class, cascade = { CascadeType.ALL}, orphanRemoval = true)
-    @JoinTable(name = "User_Applications", joinColumns = { @JoinColumn(name = "user_id")}, inverseJoinColumns = { @JoinColumn(name = "application_id") })
+    @OneToMany(targetEntity = Transaction.class, cascade = { CascadeType.ALL }, orphanRemoval = true)
+    @JoinTable(name = "User_Transactions", joinColumns = { @JoinColumn(name = "user_id") }, inverseJoinColumns = { @JoinColumn(name = "transaction_id") })
+    private List<Transaction> transactions;
+
+    @OneToMany(targetEntity = MortgageApplication.class, cascade = { CascadeType.ALL }, orphanRemoval = true)
+    @JoinTable(name = "User_Applications", joinColumns = { @JoinColumn(name = "user_id") }, inverseJoinColumns = { @JoinColumn(name = "application_id") })
     private List<MortgageApplication> mortgageApplication;
 }

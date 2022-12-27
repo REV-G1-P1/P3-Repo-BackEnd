@@ -10,6 +10,9 @@ import java.util.Optional;
 
 import javax.transaction.Transactional;
 
+import com.twilio.Twilio;
+import com.twilio.rest.api.v2010.account.Message;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -46,6 +49,7 @@ public class LoginLogoutService {
                 newUser.setLastName(tempUser.get().getLastName());
                 newUser.setAccountInformation(tempUser.get().getAccountInformation());
                 newUser.setMortgageApplication(tempUser.get().getMortgageApplication());
+                newUser.setTransactions(tempUser.get().getTransactions());
                 newUser.setUserId(tempUser.get().getUserId());
                 newUser.setAddress(tempUser.get().getAddress());
                 newUser.setUserRole(tempUser.get().getUserRole());
@@ -65,6 +69,35 @@ public class LoginLogoutService {
                 loginResponse.setMessage("Login Failed");
                 return loginResponse;
             }
+        } else {
+            loginResponse.setMessage("Login Failed");
+            return loginResponse;
+        }
+    }
+
+    public LoginResponse loginToken(Integer token) {
+        Optional<User> tempUser = userRepository.findUserByLoginToken(token);
+        LoginResponse loginResponse = new LoginResponse();
+        if (tempUser.isPresent()) {
+            tempUser.get().setLoginToken(null);
+
+            User newUser = new User();
+
+            newUser.setFirstName(tempUser.get().getFirstName());
+            newUser.setLastName(tempUser.get().getLastName());
+            newUser.setAccountInformation(tempUser.get().getAccountInformation());
+            newUser.setMortgageApplication(tempUser.get().getMortgageApplication());
+            newUser.setTransactions(tempUser.get().getTransactions());
+            newUser.setUserId(tempUser.get().getUserId());
+            newUser.setAddress(tempUser.get().getAddress());
+            newUser.setUserRole(tempUser.get().getUserRole());
+            newUser.setSSN(tempUser.get().getSSN());
+            newUser.setEmail(tempUser.get().getEmail());
+
+            loginResponse.setUser(newUser);
+            loginResponse.setMessage("Login Successful");
+            return loginResponse;
+
         } else {
             loginResponse.setMessage("Login Failed");
             return loginResponse;
@@ -96,5 +129,25 @@ public class LoginLogoutService {
     public void removeSessionById(String cookieId) {
         userRepository.removeSessionById(cookieId);
     }
-    
+
+    public void twoFactorAuthentication(User user) {
+
+        final String ACCOUNT_SID = System.getenv("TwillioSID");
+        final String AUTH_TOKEN = System.getenv("TwillioAuthToken");
+
+        Optional<User> tempUser = userRepository.findUserByEmail(user.getEmail());
+        int randomToken = (int) ((Math.random() * (99999999 - 11111111)) + 11111111);
+        if(tempUser.isPresent()) {
+            tempUser.get().setLoginToken(randomToken);
+
+            Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
+            Message message = Message.creator(
+                    new com.twilio.type.PhoneNumber("+1" + tempUser.get().getPhoneNumber()),
+                    new com.twilio.type.PhoneNumber(System.getenv("TwillioPhoneNumber")),
+                    "Verification Token: " + randomToken)
+                .create();
+
+            System.out.println(message.getSid());
+        }
+    }
 }

@@ -14,8 +14,9 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @SpringBootApplication
 public class P3BankBackendApplication {
 
+    
+
 	public static void main(String[] args) {
 		SpringApplication.run(P3BankBackendApplication.class, args);
 	}
-
 }
