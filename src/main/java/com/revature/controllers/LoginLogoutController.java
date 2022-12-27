@@ -1,5 +1,7 @@
 package com.revature.controllers;
 
+import java.util.Map;
+
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,8 +44,8 @@ public class LoginLogoutController {
     }
     
     @PostMapping("/login-token")
-    public ResponseEntity<User> loginToken(@RequestBody Integer token) {
-        LoginResponse tempUser = loginLogoutService.loginToken(token);
+    public ResponseEntity<User> loginToken(@RequestBody Map<String, Integer> token) {
+        LoginResponse tempUser = loginLogoutService.loginToken(token.get("token"));
         if(tempUser.getUser() != null) {
             session.setAttribute("CurrentUser", tempUser.getUser().getUserId());
             session.setAttribute("CurrentUserRole", tempUser.getUser().getUserRole());
