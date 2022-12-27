@@ -1,9 +1,12 @@
 spring:
     datasource:
         driverClassName: org.postgresql.Driver
-        url: jdbc:postgresql://localhost:5432/postgres?currentSchema="bankingplus"
-        username: postgres
-        password: rootpw
+        # url: jdbc:postgresql://localhost:5432/postgres?currentSchema="bankingplus"
+        # username: postgres
+        # password: rootpw
+        url: ${RDSURL}
+        username: ${RDSUSERNAME}
+        password: ${RDSPASSWORD}
     jpa:
         hibernate:
             ddl-auto: update
