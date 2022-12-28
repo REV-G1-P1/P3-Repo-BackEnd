@@ -11,7 +11,7 @@
 	<groupId>com.revature</groupId>
 	<artifactId>banking-application-backend</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>jar</packaging>
+	<packaging>war</packaging>
 	<name>banking-application-backend</name>
 	<description>Demo project for Spring Boot</description>
 	<properties>

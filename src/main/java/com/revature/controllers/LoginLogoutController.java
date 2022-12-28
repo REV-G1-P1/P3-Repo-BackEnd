@@ -19,8 +19,8 @@ import com.revature.models.User;
 import com.revature.services.LoginLogoutService;
 
 @RestController
-@RequestMapping("/login")
-@CrossOrigin(origins = "http://localhost:3000/", allowCredentials = "true")
+@RequestMapping("/")
+@CrossOrigin(value = {"http://localhost:3000/", "http://p3-project-bucket.s3-website-us-east-1.amazonaws.com/"}, allowCredentials = "true")
 public class LoginLogoutController {
     
     @Autowired
@@ -28,6 +28,11 @@ public class LoginLogoutController {
 
     @Autowired
     private HttpSession session;
+
+    @GetMapping
+    public String hello() {
+        return "Hello World";
+    }
     
     @PostMapping("/login-credentials")
     public ResponseEntity<String> loginCredentials(@RequestBody User user) {
