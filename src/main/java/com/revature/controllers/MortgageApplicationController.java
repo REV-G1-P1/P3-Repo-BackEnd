@@ -39,7 +39,7 @@ public class MortgageApplicationController {
 	
 	@PostMapping("/create")
     public ResponseEntity<String> createMortgage(@RequestBody MortgageApplication mortgage){
-        if(session.getAttribute("CurrentUserRole") != "CUSTOMER") {
+        if(!session.getAttribute("CurrentUserRole").toString().equals("CUSTOMER")) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
         if(session.getAttribute("CurrentUser") == null) {
@@ -58,7 +58,7 @@ public class MortgageApplicationController {
 	
 	@PutMapping("/process/{applicationId}")
 	public ResponseEntity<String> approveOrDenyMortgage(@PathVariable Integer applicationId, @RequestBody String status) {
-        if(session.getAttribute("CurrentUserRole") != "MANAGER") {
+        if(!session.getAttribute("CurrentUserRole").toString().equals("MANAGER")) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
         if(session.getAttribute("CurrentUser") == null) {
@@ -89,7 +89,7 @@ public class MortgageApplicationController {
 	
 	@GetMapping("/get/{applicationId}")
     public ResponseEntity<MortgageApplication> findMortgageById(@PathVariable Integer applicationId) {
-        if(session.getAttribute("CurrentUserRole") != "MANAGER") {
+        if(!session.getAttribute("CurrentUserRole").toString().equals("MANAGER")) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 		MortgageApplication ma = mortgageApplicationService.findMortgageByApplicationId(applicationId);
@@ -98,5 +98,4 @@ public class MortgageApplicationController {
         }
         return new ResponseEntity<>(ma, HttpStatus.OK);
     }
-
 }

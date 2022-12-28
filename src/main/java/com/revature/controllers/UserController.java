@@ -68,7 +68,6 @@ public class UserController {
         } catch(Exception e) {
             return new ResponseEntity<>("Error Registering User", HttpStatus.CONFLICT);
         }
-        
     }
 	
 	@PutMapping("/update")
@@ -128,7 +127,7 @@ public class UserController {
 	
 	@GetMapping("/get/mortgages/{userId}")
 	public ResponseEntity<List<MortgageApplication>> getApplicationsByUserId(@PathVariable Integer userId){
-        if(session.getAttribute("CurrentUserRole") != "MANAGER") {
+        if(!session.getAttribute("CurrentUserRole").toString().equals("MANAGER")) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 		Optional<User> user = userService.findUserById(userId);
