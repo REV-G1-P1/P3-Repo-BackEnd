@@ -24,6 +24,7 @@ import com.revature.models.AccountInformation;
 import com.revature.models.AccountType;
 import com.revature.models.MortgageApplication;
 import com.revature.models.User;
+import com.revature.models.UserRole;
 import com.revature.services.AccountInformationService;
 import com.revature.services.UserService;
 
@@ -109,8 +110,8 @@ public class UserController {
 
     @GetMapping("/get/currentuser")
     public ResponseEntity<User> findCurrentUser() {
-        try {
-            Optional<User> user = userService.findUserById(Integer.valueOf(session.getAttribute("CurrentUser").toString()));
+    	try {
+    		Optional<User> user = userService.findUserById(Integer.valueOf(session.getAttribute("CurrentUser").toString()));
             if(user.isPresent()) {
                 Hibernate.initialize(user.get().getAccountInformation());
                 Hibernate.initialize(user.get().getMortgageApplication());
@@ -119,10 +120,13 @@ public class UserController {
                 user.get().setPassword(null);
                 return new ResponseEntity<>(user.get(), HttpStatus.OK);
             }
+            
         } catch(Exception e) {
-            e.printStackTrace();
-        }
+                e.printStackTrace();
+            }
+    	
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        
     }
 	
 	@GetMapping("/get/mortgages/{userId}")
@@ -131,12 +135,12 @@ public class UserController {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 		Optional<User> user = userService.findUserById(userId);
-		if(user.isPresent()){
+		if(user.isPresent()) {
 			List<MortgageApplication> applications = new ArrayList<>();
 			applications.addAll(user.get().getMortgageApplication());
 			return new ResponseEntity<>(applications, HttpStatus.OK);
             
         }
 		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-	}
+	}	
 }
