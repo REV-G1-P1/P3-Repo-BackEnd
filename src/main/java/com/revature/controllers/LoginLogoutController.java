@@ -59,4 +59,5 @@ public class LoginLogoutController {
         session.invalidate();
         return new ResponseEntity<>("Logged out Successfully", HttpStatus.OK);
     }
+    
 }
