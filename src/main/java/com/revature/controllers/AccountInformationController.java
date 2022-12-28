@@ -15,7 +15,7 @@ import com.revature.services.AccountInformationService;
 
 @RestController
 @RequestMapping("/accounts")
-@CrossOrigin(origins = "http://localhost:3000/", allowCredentials = "true")
+@CrossOrigin(value = {"http://localhost:3000/", "http://p3-project-bucket.s3-website-us-east-1.amazonaws.com/"}, allowCredentials = "true")
 public class AccountInformationController {
 	
 	@Autowired

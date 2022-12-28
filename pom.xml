@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.revature</groupId>
-	<artifactId>social-media-application-backend</artifactId>
+	<artifactId>banking-application-backend</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>war</packaging>
-	<name>social-media-application-backend</name>
+	<name>banking-application-backend</name>
 	<description>Demo project for Spring Boot</description>
 	<properties>
 		<java.version>11</java.version>
@@ -80,7 +80,7 @@
             <groupId>com.twilio.sdk</groupId>
             <artifactId>twilio</artifactId>
             <version>9.2.0</version>
-          </dependency>
+        </dependency>
 	</dependencies>
 
 	<build>
