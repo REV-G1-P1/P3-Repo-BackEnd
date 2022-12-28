@@ -1,4 +1,4 @@
-# My Spring Boot Application
+# Banking Spring Boot Backend Application
 
 This is a Spring Boot application that uses Swagger, PostgreSQL, EC2, Twilio, and RDS.
 
