@@ -64,5 +64,9 @@ public class MortgageApplicationService {
 		}
 		return null;
 	}
+	
+	public List<MortgageApplication> findAllApplications() {
+        return mortgageApplicationRepository.findAll();
+    }
 
 }
