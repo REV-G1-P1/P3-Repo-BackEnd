@@ -39,21 +39,25 @@ public class MortgageApplicationController {
 	
 	@PostMapping("/create")
     public ResponseEntity<String> createMortgage(@RequestBody MortgageApplication mortgage){
-        if(!session.getAttribute("CurrentUserRole").toString().equals("CUSTOMER")) {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }
-        if(session.getAttribute("CurrentUser") == null) {
-            mortgageApplicationService.createMortgage(mortgage);
-        } else {
-            Integer userId = Integer.valueOf(session.getAttribute("CurrentUser").toString());
-            Optional<User> user = userService.findUserById(userId);
-            if(user.isPresent()) {
-                mortgageApplicationService.createMortgage(mortgage, user.get());
-            } else {
-                return new ResponseEntity<>("Mortgage Application Failed to Create", HttpStatus.CONFLICT);
+        try {
+            if(!session.getAttribute("CurrentUserRole").toString().equals("CUSTOMER")) {
+                return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
             }
+            if(session.getAttribute("CurrentUser") == null) {
+                mortgageApplicationService.createMortgage(mortgage);
+            } else {
+                Integer userId = Integer.valueOf(session.getAttribute("CurrentUser").toString());
+                Optional<User> user = userService.findUserById(userId);
+                if(user.isPresent()) {
+                    mortgageApplicationService.createMortgage(mortgage, user.get());
+                } else {
+                    return new ResponseEntity<>("Mortgage Application Failed to Create", HttpStatus.CONFLICT);
+                }
+            }
+            return new ResponseEntity<>("Mortgage Application succesfully created", HttpStatus.CREATED);
+        } catch(Exception ex) {
+            return new ResponseEntity<>("Mortgage Application Already Exists", HttpStatus.CONFLICT);
         }
-		return new ResponseEntity<>("Mortgage Application succesfully created", HttpStatus.CREATED);
     }
 	
 	@PutMapping("/process/{applicationId}")
