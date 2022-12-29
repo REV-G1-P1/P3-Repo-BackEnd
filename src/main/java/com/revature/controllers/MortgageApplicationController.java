@@ -102,4 +102,16 @@ public class MortgageApplicationController {
         }
         return new ResponseEntity<>(ma, HttpStatus.OK);
     }
+	
+	@GetMapping("/get/all")
+    public ResponseEntity<List<MortgageApplication>> findAllApplications() {
+        if(!session.getAttribute("CurrentUserRole").toString().equals("MANAGER")) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+		List<MortgageApplication> ma = mortgageApplicationService.findAllApplications();
+        if(ma == null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(ma, HttpStatus.OK);
+    }
 }
