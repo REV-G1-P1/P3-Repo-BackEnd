@@ -4,9 +4,9 @@ spring:
         # url: jdbc:postgresql://localhost:5432/postgres?currentSchema="bankingplus"
         # username: postgres
         # password: rootpw
-        url: jdbc:postgresql://kboadb.cjtgqrath0m4.us-east-1.rds.amazonaws.com:5432/postgres?currentSchema="bankingplus"
-        username: postgres
-        password: rootpassword
+        url: ${RDSURL}
+        username: ${RDSUSERNAME}
+        password: ${RDSPASSWORD}
     jpa:
         hibernate:
             ddl-auto: update
