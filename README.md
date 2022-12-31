@@ -26,11 +26,11 @@ To build and run the application:
 
 1. Clone this repository.
 2. Run `mvn clean install` to build the application.
-3. Run `java -war target/banking-application-backend.war` to start the application.
+3. Run `java -jar target/banking-application-backend.jar` to start the application.
 
 ## Using the API
 
-To use the API, you can use Swagger UI, which is available at `http://localhost:8090/swagger-ui.html` when the application is running. You can also use a tool like Postman to make API requests.
+To use the API, you can use Swagger UI, which is available at `http://localhost:8084/swagger-ui.html` when the application is running. You can also use a tool like Postman to make API requests.
 
 To use the Twilio API, you will need to set environment variables: TwillioSID, TwillioAuthToken, TwillioPhoneNumber.
 These variables are used within the `LoginLogoutService.java`.
