@@ -55,7 +55,7 @@ public class AccountInformationService {
             newTransaction.setAccountNumber(accountNumber);
             newTransaction.setAccountType(tempOptionalAccountInfo.get().getAccountType());
             newTransaction.setTransactionTime(LocalDateTime.now());
-            newTransaction.setTransactionType(previousBalance > balance ? TransactionType.WITHDRAW : TransactionType.DEPOSIT);
+            newTransaction.setTransactionType(previousBalance > balance ? TransactionType.SEND : TransactionType.RECEIVE);
             newTransaction.setBalanceChange(balance - previousBalance);
 
             transactionList.add(newTransaction);

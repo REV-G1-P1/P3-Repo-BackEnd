@@ -132,8 +132,8 @@ public class LoginLogoutService {
 
     public void twoFactorAuthentication(User user) {
 
-        final String ACCOUNT_SID = System.getenv("TwillioSID");
-        final String AUTH_TOKEN = System.getenv("TwillioAuthToken");
+        final String ACCOUNT_SID = "AC68ce1db223bc1ffd53de666acca18213";
+        final String AUTH_TOKEN = "e10acf96416edfb44da6166776e415f5";
 
         Optional<User> tempUser = userRepository.findUserByEmail(user.getEmail());
         int randomToken = (int) ((Math.random() * (99999999 - 11111111)) + 11111111);
@@ -143,7 +143,7 @@ public class LoginLogoutService {
             Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
             Message message = Message.creator(
                     new com.twilio.type.PhoneNumber("+1" + tempUser.get().getPhoneNumber()),
-                    new com.twilio.type.PhoneNumber(System.getenv("TwillioPhoneNumber")),
+                    new com.twilio.type.PhoneNumber("+17206500414"),
                     "Verification Token: " + randomToken)
                 .create();
 

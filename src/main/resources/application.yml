@@ -4,9 +4,9 @@ spring:
         # url: jdbc:postgresql://localhost:5432/postgres?currentSchema="bankingplus"
         # username: postgres
         # password: rootpw
-        url: ${RDSURL}
-        username: ${RDSUSERNAME}
-        password: ${RDSPASSWORD}
+        url: jdbc:postgresql://kboadb.cjtgqrath0m4.us-east-1.rds.amazonaws.com:5432/postgres?currentSchema="bankingplus"
+        username: postgres
+        password: rootpassword
     jpa:
         hibernate:
             ddl-auto: update
@@ -18,7 +18,7 @@ spring:
             initialize-schema: always
             
 server:
-    port: 8090
+    port: 8084
     servlet:
         session:
             cookie:

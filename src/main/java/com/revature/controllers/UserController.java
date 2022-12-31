@@ -24,7 +24,6 @@ import com.revature.models.AccountInformation;
 import com.revature.models.AccountType;
 import com.revature.models.MortgageApplication;
 import com.revature.models.User;
-import com.revature.models.UserRole;
 import com.revature.services.AccountInformationService;
 import com.revature.services.UserService;
 
